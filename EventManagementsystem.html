@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campus Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1c1a3d;--bg:#f4f3ff;--line:#e1def5;--pri:#4f3ff0;--pri2:#8f6bff;--acc:#ff7a45;--live:#e5384f;--ok:#12a594;--mute:#6b6a8a}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Bricolage Grotesque',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+button,input,select,textarea{font:inherit}
+h1,h2,h3{margin:0;line-height:1.15}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.top{background:linear-gradient(90deg,var(--pri),var(--pri2));color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.top b{font-size:1.25rem;font-weight:800}
+.top span{opacity:.9;font-size:.9rem;margin-right:12px}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tabs button{border:0;background:#fff;padding:9px 16px;border-radius:99px;cursor:pointer;font-weight:600;color:var(--mute);box-shadow:0 1px 3px #4f3ff01f}
+.tabs button.on{background:var(--pri);color:#fff}
+.box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+.hello{background:linear-gradient(120deg,var(--ink),#3b2fb5);color:#fff;border:0}
+.hello p{color:#cfcaf5;margin:6px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.stat{display:flex;gap:14px;align-items:center;border-left:5px solid var(--c,var(--pri))}
+.stat i{font-style:normal;font-size:1.8rem}
+.stat h2{font-size:1.9rem}
+h3.sec{margin:22px 0 12px;font-size:1.25rem}
+label{display:block;font-size:.85rem;font-weight:600;margin:12px 0 4px}
+input,select,textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+input:focus,select:focus,textarea:focus{border-color:var(--pri);outline:0}
+.btn{background:var(--acc);color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:600;cursor:pointer}
+.btn.pri{background:var(--pri)}.btn.dark{background:var(--ink)}.btn.red{background:var(--live)}.btn.ghost{background:#efedff;color:var(--pri)}
+.btn.sm{padding:6px 12px;font-size:.85rem}.btn.full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.tag{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:700;color:#fff;background:#0007}
+.tag.live{background:var(--live)}
+.mute{color:var(--mute);font-size:.9rem}
+.card{padding:0;overflow:hidden;margin:0;display:flex;flex-direction:column}
+.ban{height:110px;display:flex;justify-content:space-between;align-items:flex-start;padding:12px;font-size:2.6rem;color:#fff}
+.ban span{align-self:center}
+.cb{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.cb p{margin:0}
+.bar{height:8px;background:var(--line);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok);border-radius:9px}.bar i.full{background:var(--live)}
+table{width:100%;border-collapse:collapse;font-size:.9rem;white-space:nowrap}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mute);font-weight:600}
+.scroll{overflow-x:auto}
+.msg{padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:.92rem}
+.msg.err{background:#fde8ec;color:#a3172d}.msg.ok{background:#dcf5f0;color:#0b6b5f}
+.auth{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}
+.hero{background:linear-gradient(150deg,#241a8c,var(--pri) 55%,var(--pri2));color:#fff;padding:60px 48px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.hero h1{font-size:3rem;font-weight:800}
+.hero p{margin:0;font-size:1.05rem;color:#dcd7ff;max-width:420px}
+.hero ul{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:10px}
+.hero li{background:#ffffff1f;padding:10px 14px;border-radius:10px;max-width:380px}
+.form{display:flex;align-items:center;justify-content:center;padding:32px}
+.form .box{width:100%;max-width:400px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.ov{position:fixed;inset:0;background:#1c1a3d99;display:flex;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto;z-index:9}
+.modal{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:620px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.f2 .w{grid-column:1/-1}
+.chk{display:flex;gap:8px;align-items:flex-start;font-weight:400;margin-top:14px}
+.chk input{width:auto;margin-top:4px}
+@media(max-width:800px){.auth{grid-template-columns:1fr}.hero{display:none}.f2{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ---------- Data (localStorage) ---------- */
+const loc = d => new Date(d - d.getTimezoneOffset()*6e4).toISOString().slice(0,16);
+const H = 36e5;
+function seed(){
+  const n = Date.now();
+  return {
+    users:[{role:'admin',name:'Administrator',user:'admin',pass:'admin123'},
+           {role:'student',name:'Demo Student',user:'student',pass:'student123',roll:'CS001'}],
+    events:[
+      {id:1,title:'Hackathon 24h',desc:'Build a project in 24 hours and win prizes.',venue:'Computer Lab',start:loc(new Date(n-2*H)),end:loc(new Date(n+4*H)),seats:3},
+      {id:2,title:'Guest Lecture: AI in Industry',desc:'Talk by an industry expert on careers in AI.',venue:'Main Auditorium',start:loc(new Date(n+24*H)),end:loc(new Date(n+26*H)),seats:100},
+      {id:3,title:'Annual Sports Meet',desc:'Track and field events for all departments.',venue:'College Ground',start:loc(new Date(n+72*H)),end:loc(new Date(n+80*H)),seats:50}],
+    regs:[]
+  };
+}
+let db;
+try{ db = JSON.parse(localStorage.getItem('cem2')) || seed(); }catch(e){ db = seed(); }
+const save = () => { try{ localStorage.setItem('cem2', JSON.stringify(db)); }catch(e){} };
+let me = null;
+try{ me = JSON.parse(sessionStorage.getItem('cem2_me')); }catch(e){}
+let tab = null, msg = null, editId = null, mode = 'login', regEvent = null, fEvent = 'all';
+
+/* ---------- Helpers ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = s => new Date(s).toLocaleString([], {dateStyle:'medium', timeStyle:'short'});
+function status(e){ const n = Date.now(); return n < new Date(e.start) ? 'up' : n <= new Date(e.end) ? 'live' : 'end'; }
+const label = {up:'Upcoming', live:'Live now', end:'Ended'};
+const taken = id => db.regs.filter(r => r.eid === id).length;
+const left = e => Math.max(0, e.seats - taken(e.id));
+const flash = (t, kind='ok') => { msg = {t, kind}; };
+const msgHtml = () => { const m = msg; msg = null; return m ? `<div class="msg ${m.kind}" role="alert">${esc(m.t)}</div>` : ''; };
+const themes = [['#4f3ff0','#8f6bff','🎤'],['#ff7a45','#ffb347','🏆'],['#12a594','#4ad6c0','💻'],['#e6447c','#ff8fb1','🎭'],['#2a7de1','#63b3ff','⚽']];
+const theme = e => themes[[...e.title].reduce((a,c) => a + c.charCodeAt(0), 0) % 5];
+const DEPTS = ['Computer Engineering','Information Technology','AI & Data Science','Electronics & Telecom','Mechanical','Civil','Electrical','Other'];
+const YEARS = ['First Year','Second Year','Third Year','Final Year'];
+const opts = a => a.map(x => `<option>${x}</option>`).join('');
+const stat = (i, l, v, c) => `<div class="box stat" style="--c:${c}"><i>${i}</i><div><p class="mute" style="margin:0">${l}</p><h2>${v}</h2></div></div>`;
+
+/* ---------- Auth ---------- */
+function doLogin(ev){
+  ev.preventDefault();
+  const role = $('role').value, user = $('u').value.trim(), pass = $('p').value;
+  const u = db.users.find(x => x.role === role && x.user === user && x.pass === pass);
+  if(!u){ flash('Wrong username or password for this role.', 'err'); return render(); }
+  me = u; tab = null;
+  try{ sessionStorage.setItem('cem2_me', JSON.stringify(u)); }catch(e){}
+  render();
+}
+function doSignup(ev){
+  ev.preventDefault();
+  const user = $('su').value.trim();
+  if(db.users.some(x => x.user === user)){ flash('That username is taken. Choose another.', 'err'); return render(); }
+  db.users.push({role:'student', name:$('sn').value.trim(), roll:$('sr').value.trim(), user, pass:$('sp').value});
+  save(); mode = 'login'; flash('Account created. Log in as Student.'); render();
+}
+function logout(){ me = null; regEvent = null; try{ sessionStorage.removeItem('cem2_me'); }catch(e){} render(); }
+
+/* ---------- Login view ---------- */
+function loginView(){
+  const s = mode === 'signup';
+  return `<div class="auth"><div class="hero"><h1>🎓 Campus Events</h1>
+    <p>Find what is happening on campus, grab your seat and never miss a event again.</p>
+    <ul><li>🔴 See live events right now</li><li>🗓️ Browse upcoming events</li><li>🎟️ Register in one minute</li></ul></div>
+    <div class="form"><div class="box"><h2>${s ? 'Create student account' : 'Welcome back'}</h2><p class="mute">${s ? 'Fill in your details to get started.' : 'Log in to continue.'}</p>${msgHtml()}
+    ${s ? `<form onsubmit="doSignup(event)">
+      <label for="sn">Full name</label><input id="sn" required>
+      <label for="sr">Roll number</label><input id="sr" required>
+      <label for="su">Username</label><input id="su" required>
+      <label for="sp">Password</label><input id="sp" type="password" minlength="4" required>
+      <div class="row"><button class="btn pri">Create account</button><button type="button" class="btn ghost" onclick="mode='login';render()">Back to login</button></div></form>`
+    : `<form onsubmit="doLogin(event)">
+      <label for="role">Login as</label><select id="role"><option value="student">Student</option><option value="admin">Admin</option></select>
+      <label for="u">Username</label><input id="u" required autocomplete="username">
+      <label for="p">Password</label><input id="p" type="password" required autocomplete="current-password">
+      <div class="row"><button class="btn pri">Log in</button><button type="button" class="btn ghost" onclick="mode='signup';render()">New student? Sign up</button></div></form>
+      <p class="mute" style="margin-top:16px">Demo: admin / admin123 &middot; student / student123</p>`}
+    </div></div></div>`;
+}
+function shell(tabs, body){
+  return `<div class="top"><b>🎓 Campus Events</b><div><span>${esc(me.name)} (${me.role})</span><button class="btn sm" onclick="logout()">Log out</button></div></div>
+  <div class="wrap"><div class="tabs" role="tablist">${tabs.map(([k,l]) => `<button role="tab" class="${tab===k?'on':''}" onclick="tab='${k}';editId=null;render()">${l}</button>`).join('')}</div>${msgHtml()}${body}</div>`;
+}
+
+/* ---------- Admin ---------- */
+const adminTabs = [['home','🏠 Dashboard'],['reg','🧑‍🎓 Register Student'],['create','➕ Create Event'],['manage','🛠️ Manage Events'],['data','📋 Registration Data'],['seats','💺 Seat Status']];
+function regRow(r){
+  const e = db.events.find(x => x.id === r.eid) || {title:'(deleted)'}, d = r.d || {};
+  return `<tr><td>${esc(d.name)}</td><td>${esc(d.roll)}</td><td>${esc(d.dept)}</td><td>${esc(d.year)}</td><td>${esc(d.sec)}</td><td>${esc(d.mobile)}</td><td>${esc(d.email)}</td><td>${esc(e.title)}</td><td>${fmt(r.time)}</td></tr>`;
+}
+function adminView(){
+  tab = tab || 'home';
+  let b = '';
+  if(tab === 'home'){
+    const cnt = s => db.events.filter(e => status(e) === s).length;
+    const recent = db.regs.slice(-5).reverse();
+    b = `<div class="box hello"><h2>Welcome, ${esc(me.name)} 👋</h2><p>Here is what is happening across your college events.</p></div>
+      <div class="grid">${stat('🧑‍🎓','Students',db.users.filter(u => u.role === 'student').length,'#4f3ff0')}${stat('📅','Total events',db.events.length,'#ff7a45')}${stat('🔴','Live now',cnt('live'),'#e5384f')}${stat('🗓️','Upcoming',cnt('up'),'#2a7de1')}${stat('🎟️','Registrations',db.regs.length,'#12a594')}</div>
+      <h3 class="sec">Latest registrations</h3><div class="box scroll">` + (recent.length ? `<table><tr><th>Name</th><th>Roll</th><th>Dept</th><th>Year</th><th>Sec</th><th>Mobile</th><th>Email</th><th>Event</th><th>Date</th></tr>${recent.map(regRow).join('')}</table>` : `<p class="mute">No registrations yet.</p>`) + `</div>`;
+  }
+  if(tab === 'reg'){
+    const st = db.users.filter(u => u.role === 'student');
+    b = `<div class="box"><h2>Register a student</h2><form onsubmit="addStudent(event)">
+      <label for="an">Full name</label><input id="an" required>
+      <label for="ar">Roll number</label><input id="ar" required>
+      <label for="au">Username</label><input id="au" required>
+      <label for="ap">Password</label><input id="ap" minlength="4" required>
+      <div class="row"><button class="btn pri">Register student</button></div></form></div>
+      <div class="box scroll"><h3>Registered students (${st.length})</h3><table><tr><th>Name</th><th>Roll no.</th><th>Username</th></tr>
+      ${st.map(s => `<tr><td>${esc(s.name)}</td><td>${esc(s.roll)}</td><td>${esc(s.user)}</td></tr>`).join('')}</table></div>`;
+  }
+  if(tab === 'create'){
+    const e = db.events.find(x => x.id === editId) || {title:'',desc:'',venue:'',start:'',end:'',seats:50};
+    b = `<div class="box"><h2>${editId ? 'Edit event' : 'Create event'}</h2><form onsubmit="saveEvent(event)"><div class="f2">
+      <div class="w"><label for="et">Event title</label><input id="et" value="${esc(e.title)}" required></div>
+      <div class="w"><label for="ed">Description</label><textarea id="ed" rows="3">${esc(e.desc)}</textarea></div>
+      <div><label for="ev">Venue</label><input id="ev" value="${esc(e.venue)}" required></div>
+      <div><label for="en">Total seats</label><input id="en" type="number" min="1" value="${e.seats}" required></div>
+      <div><label for="es">Starts</label><input id="es" type="datetime-local" value="${e.start}" required></div>
+      <div><label for="ee">Ends</label><input id="ee" type="datetime-local" value="${e.end}" required></div></div>
+      <div class="row"><button class="btn pri">${editId ? 'Save changes' : 'Create event'}</button></div></form></div>`;
+  }
+  if(tab === 'manage'){
+    b = db.events.length ? `<div class="grid">${db.events.map(e => { const t = theme(e); return `<div class="box card"><div class="ban" style="background:linear-gradient(135deg,${t[0]},${t[1]})"><span class="tag ${status(e)}">${label[status(e)]}</span><span>${t[2]}</span></div>
+      <div class="cb"><h3>${esc(e.title)}</h3><p class="mute">📍 ${esc(e.venue)}<br>${fmt(e.start)} to ${fmt(e.end)}</p><p>${taken(e.id)} of ${e.seats} seats booked</p>
+      <div class="row" style="margin:0"><button class="btn sm pri" onclick="editId=${e.id};tab='create';render()">Edit</button><button class="btn sm red" onclick="delEvent(${e.id})">Delete</button></div></div></div>`; }).join('')}</div>`
+      : `<div class="box">No events yet. Open Create Event to add the first one.</div>`;
+  }
+  if(tab === 'data'){
+    const rows = db.regs.filter(r => fEvent === 'all' || String(r.eid) === fEvent);
+    b = `<div class="box"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><h2>Student registrations (${rows.length})</h2>
+      <div style="display:flex;gap:8px"><select onchange="fEvent=this.value;render()" aria-label="Filter by event"><option value="all">All events</option>${db.events.map(e => `<option value="${e.id}" ${String(e.id)===fEvent?'selected':''}>${esc(e.title)}</option>`).join('')}</select>
+      <button class="btn pri" onclick="exportCsv()">Download CSV</button></div></div>
+      <div class="scroll" style="margin-top:12px">` + (rows.length ? `<table><tr><th>Name</th><th>Roll</th><th>Dept</th><th>Year</th><th>Sec</th><th>Mobile</th><th>Email</th><th>Event</th><th>Date</th></tr>${rows.map(regRow).join('')}</table>` : `<p class="mute">No registrations found.</p>`) + `</div></div>`;
+  }
+  if(tab === 'seats'){
+    b = `<div class="grid">${db.events.map(e => { const t = taken(e.id);
+      return `<div class="box"><span class="tag ${status(e)}">${label[status(e)]}</span><h3 style="margin:8px 0">${esc(e.title)}</h3>
+      <div class="bar"><i class="${left(e)?'':'full'}" style="width:${Math.min(100, t/e.seats*100)}%"></i></div>
+      <p class="mute">${t} booked &middot; <b>${left(e)} of ${e.seats} seats left</b></p></div>`; }).join('') || '<div class="box">No events yet.</div>'}</div>`;
+  }
+  return shell(adminTabs, b);
+}
+function addStudent(ev){
+  ev.preventDefault();
+  const user = $('au').value.trim();
+  if(db.users.some(x => x.user === user)){ flash('That username is taken.', 'err'); return render(); }
+  db.users.push({role:'student', name:$('an').value.trim(), roll:$('ar').value.trim(), user, pass:$('ap').value});
+  save(); flash('Student registered.'); render();
+}
+function saveEvent(ev){
+  ev.preventDefault();
+  const o = {title:$('et').value.trim(), desc:$('ed').value.trim(), venue:$('ev').value.trim(), start:$('es').value, end:$('ee').value, seats:+$('en').value};
+  if(new Date(o.end) <= new Date(o.start)){ flash('End time must be after the start time.', 'err'); return render(); }
+  if(editId){
+    if(o.seats < taken(editId)){ flash('Seats cannot be fewer than the ' + taken(editId) + ' already booked.', 'err'); return render(); }
+    Object.assign(db.events.find(x => x.id === editId), o); flash('Event updated.');
+  } else { db.events.push({id:Date.now(), ...o}); flash('Event created.'); }
+  editId = null; tab = 'manage'; save(); render();
+}
+function delEvent(id){
+  if(!confirm('Delete this event and its registrations?')) return;
+  db.events = db.events.filter(e => e.id !== id); db.regs = db.regs.filter(r => r.eid !== id);
+  save(); flash('Event deleted.'); render();
+}
+function exportCsv(){
+  const head = ['Name','Roll','Department','Year','Section','Mobile','Email','Note','Event','Registered on'];
+  const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const rows = db.regs.filter(r => fEvent === 'all' || String(r.eid) === fEvent).map(r => {
+    const d = r.d || {}, e = db.events.find(x => x.id === r.eid) || {title:''};
+    return [d.name,d.roll,d.dept,d.year,d.sec,d.mobile,d.email,d.note,e.title,fmt(r.time)].map(q).join(',');
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([[head.map(q).join(','), ...rows].join('\n')], {type:'text/csv'}));
+  a.download = 'registrations.csv'; a.click();
+}
+
+/* ---------- Student ---------- */
+const studentTabs = [['home','🏠 Dashboard'],['up','🗓️ Upcoming Events'],['live','🔴 Live Events'],['mine','🎟️ My Registrations']];
+function studentCard(e){
+  const mineReg = db.regs.some(r => r.eid === e.id && r.user === me.user), s = status(e), full = left(e) === 0, t = theme(e);
+  return `<div class="box card"><div class="ban" style="background:linear-gradient(135deg,${t[0]},${t[1]})"><span class="tag ${s}">${label[s]}</span><span>${t[2]}</span></div>
+    <div class="cb"><h3>${esc(e.title)}</h3><p class="mute">📍 ${esc(e.venue)}<br>🕒 ${fmt(e.start)} to ${fmt(e.end)}</p><p>${esc(e.desc)}</p>
+    <div class="bar"><i class="${full?'full':''}" style="width:${Math.min(100, taken(e.id)/e.seats*100)}%"></i></div>
+    <p class="mute" style="margin:0"><b>${left(e)} of ${e.seats} seats available</b></p>
+    <button class="btn ${mineReg?'ghost':''} full" ${mineReg||full||s==='end'?'disabled':''} onclick="regEvent=${e.id};render()">${mineReg?'✔ Registered':full?'Event full':s==='end'?'Event ended':'Register now'}</button></div></div>`;
+}
+function studentView(){
+  tab = tab || 'home';
+  if(tab === 'home'){
+    const live = db.events.filter(e => status(e) === 'live'), up = db.events.filter(e => status(e) === 'up');
+    const sec = (t, l, m) => `<h3 class="sec">${t}</h3>` + (l.length ? `<div class="grid">${l.map(studentCard).join('')}</div>` : `<div class="box">${m}</div>`);
+    return shell(studentTabs, `<div class="box hello"><h2>Hi ${esc(me.name)} 👋</h2><p>Roll no. ${esc(me.roll)}. Pick an event and grab your seat.</p></div>
+      <div class="grid">${stat('🔴','Live now',live.length,'#e5384f')}${stat('🗓️','Upcoming',up.length,'#2a7de1')}${stat('🎟️','My registrations',db.regs.filter(r => r.user === me.user).length,'#12a594')}</div>
+      ${sec('Live events', live, 'Nothing is live at the moment.')}${sec('Upcoming events', up.slice(0, 3), 'No upcoming events right now.')}`);
+  }
+  const list = tab === 'mine' ? db.events.filter(e => db.regs.some(r => r.eid === e.id && r.user === me.user)) : db.events.filter(e => status(e) === tab);
+  const empty = {up:'No upcoming events right now.', live:'Nothing is live at the moment.', mine:'You have not registered for any event yet. Open Upcoming Events to pick one.'}[tab];
+  return shell(studentTabs, list.length ? `<div class="grid">${list.map(studentCard).join('')}</div>` : `<div class="box">${empty}</div>`);
+}
+
+/* ---------- Registration form (popup) ---------- */
+function modalView(){
+  const e = db.events.find(x => x.id === regEvent);
+  if(!e) return '';
+  return `<div class="ov" onclick="if(event.target===this){regEvent=null;render()}"><div class="modal" role="dialog" aria-modal="true" aria-label="Event registration">
+    <h2>Register for ${esc(e.title)}</h2><p class="mute">${left(e)} seats left &middot; ${fmt(e.start)}</p>
+    <form onsubmit="submitReg(event)"><div class="f2">
+      <div><label for="r_name">Full name</label><input id="r_name" value="${esc(me.name)}" required></div>
+      <div><label for="r_roll">Roll number</label><input id="r_roll" value="${esc(me.roll)}" required></div>
+      <div><label for="r_dept">Department</label><select id="r_dept" required>${opts(DEPTS)}</select></div>
+      <div><label for="r_year">Year</label><select id="r_year" required>${opts(YEARS)}</select></div>
+      <div><label for="r_sec">Section / Division</label><input id="r_sec" placeholder="e.g. A" required></div>
+      <div><label for="r_mob">Mobile number</label><input id="r_mob" type="tel" inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit number" title="Enter a valid 10-digit mobile number" required></div>
+      <div class="w"><label for="r_mail">Email</label><input id="r_mail" type="email" required></div>
+      <div class="w"><label for="r_note">Team name or message (optional)</label><textarea id="r_note" rows="2"></textarea></div></div>
+      <label class="chk"><input type="checkbox" id="r_ok" required> I confirm that the details above are correct.</label>
+      <div class="row"><button class="btn pri">Confirm registration</button><button type="button" class="btn ghost" onclick="regEvent=null;render()">Cancel</button></div></form></div></div>`;
+}
+function submitReg(ev){
+  ev.preventDefault();
+  const e = db.events.find(x => x.id === regEvent);
+  if(!e) return;
+  if(left(e) === 0){ regEvent = null; flash('Sorry, this event just became full.', 'err'); return render(); }
+  if(db.regs.some(r => r.eid === e.id && r.user === me.user)){ regEvent = null; return render(); }
+  db.regs.push({eid:e.id, user:me.user, time:new Date().toISOString(), d:{
+    name:$('r_name').value.trim(), roll:$('r_roll').value.trim(), dept:$('r_dept').value, year:$('r_year').value,
+    sec:$('r_sec').value.trim(), mobile:$('r_mob').value.trim(), email:$('r_mail').value.trim(), note:$('r_note').value.trim()}});
+  save(); regEvent = null; flash('You are registered for ' + e.title + '. See you there!'); render();
+}
+
+/* ---------- Render ---------- */
+function render(){
+  $('app').innerHTML = (!me ? loginView() : me.role === 'admin' ? adminView() : studentView()) + (me && me.role === 'student' ? modalView() : '');
+}
+render();
+setInterval(() => { if(me && !regEvent && !['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) render(); }, 60000);
+</script>
+</body>
+</html>
